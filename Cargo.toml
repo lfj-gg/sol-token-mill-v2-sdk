@@ -1,0 +1,5 @@
+[workspace]
+members = ["token-mill-v2-sdk", "client"]
+package.version = "0.1.0"
+package.edition = "2024"
+resolver = "3"
