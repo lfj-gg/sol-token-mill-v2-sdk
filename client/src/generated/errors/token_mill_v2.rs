@@ -70,6 +70,9 @@ pub enum TokenMillV2Error {
     /// 6019 -
     #[error("")]
     SlippageExceeded = 0x1783,
+    /// 6020 -
+    #[error("")]
+    AmountUnderflow = 0x1784,
 }
 
 impl solana_program::program_error::PrintProgramError for TokenMillV2Error {

@@ -26,6 +26,8 @@ pub fn mul_div_round_up(x: U256, y: U256, denominator: U256) -> Result<u128> {
     if (x % denominator).is_zero() {
         Ok(result)
     } else {
-        Ok(result + 1)
+        result
+            .checked_add(1)
+            .ok_or(TokenMillV2Error::AmountOverflow.into())
     }
 }
