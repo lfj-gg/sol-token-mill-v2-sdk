@@ -33,7 +33,7 @@ pub fn get_delta_amounts(
             .checked_sub(fee.into())
             .ok_or(AmountUnderflow)?;
         let amount_in_available = fee_inverse
-            .checked_mul(delta_amount as u128)
+            .checked_mul(delta_amount.into())
             .ok_or(AmountOverflow)?
             .checked_div(MAX_FEE_U128)
             .ok_or(DivisionByZero)?;
