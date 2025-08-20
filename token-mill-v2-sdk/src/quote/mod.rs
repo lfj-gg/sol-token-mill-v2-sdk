@@ -1,7 +1,10 @@
 use anyhow::Result;
 
 use crate::quote::swap_math::get_delta_amounts;
-use token_mill_v2_client::accounts::Market;
+use token_mill_v2_client::{
+    accounts::Market,
+    errors::TokenMillV2Error::{AmountOverflow, AmountUnderflow},
+};
 
 mod math;
 mod swap_math;
@@ -105,11 +108,18 @@ fn get_delta_amounts_from_dual_pool(
     )?;
 
     if delta_amount.is_positive() {
-        // Safe cast
-        delta_amount -= (amount_in + fee_amount) as i64;
+        delta_amount = delta_amount
+            .checked_sub(
+                amount_in
+                    .checked_add(fee_amount)
+                    .ok_or(AmountOverflow)?
+                    .try_into()?,
+            )
+            .ok_or(AmountUnderflow)?;
     } else {
-        // Safe cast
-        delta_amount += amount_out as i64;
+        delta_amount = delta_amount
+            .checked_add(amount_out.try_into()?)
+            .ok_or(AmountOverflow)?;
     }
 
     // Second pool
@@ -129,14 +139,20 @@ fn get_delta_amounts_from_dual_pool(
             fee,
         )?;
 
-        amount_in += additional_amount_in;
-        amount_out += additional_amount_out;
-        fee_amount += additional_fee_amount;
+        amount_in = amount_in
+            .checked_add(additional_amount_in)
+            .ok_or(AmountOverflow)?;
+        amount_out = amount_out
+            .checked_add(additional_amount_out)
+            .ok_or(AmountOverflow)?;
+        fee_amount = fee_amount
+            .checked_add(additional_fee_amount)
+            .ok_or(AmountOverflow)?;
     }
 
     Ok((
         new_sqrt_price,
-        amount_in + fee_amount,
+        amount_in.checked_add(fee_amount).ok_or(AmountOverflow)?,
         amount_out,
         fee_amount,
     ))
