@@ -7,6 +7,7 @@
 
 pub(crate) mod r#create_config;
 pub(crate) mod r#create_market;
+pub(crate) mod r#force_remove_fee_reserve;
 pub(crate) mod r#remove_swap_authority;
 pub(crate) mod r#swap;
 pub(crate) mod r#swap_with_price_limit;
@@ -17,6 +18,7 @@ pub(crate) mod r#update_market_defaults;
 
 pub use self::r#create_config::*;
 pub use self::r#create_market::*;
+pub use self::r#force_remove_fee_reserve::*;
 pub use self::r#remove_swap_authority::*;
 pub use self::r#swap::*;
 pub use self::r#swap_with_price_limit::*;
