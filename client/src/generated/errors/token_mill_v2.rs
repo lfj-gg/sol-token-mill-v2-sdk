@@ -72,7 +72,10 @@ pub enum TokenMillV2Error {
     SlippageExceeded = 0x1783,
     /// 6020 -
     #[error("")]
-    AmountUnderflow = 0x1784,
+    CanOnlyOptInKOTM = 0x1784,
+    /// 6021 -
+    #[error("")]
+    AmountUnderflow = 0x1785,
 }
 
 impl solana_program::program_error::PrintProgramError for TokenMillV2Error {
