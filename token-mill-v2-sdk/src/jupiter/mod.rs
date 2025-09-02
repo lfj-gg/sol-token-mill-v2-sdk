@@ -167,7 +167,7 @@ mod tests {
 
     use borsh::BorshDeserialize;
     use jupiter_amm_interface::ClockRef;
-    use solana_sdk::{clock::Clock, instruction::Instruction, native_token::sol_to_lamports};
+    use solana_sdk::{clock::Clock, instruction::Instruction, native_token::sol_str_to_lamports};
     use token_mill_v2_client::{
         instructions::SwapInstructionData,
         types::{SwapParameters, SwapResult},
@@ -204,7 +204,7 @@ mod tests {
 
         amm.update(&account_map).unwrap();
 
-        let amount_in = sol_to_lamports(1.0);
+        let amount_in = sol_str_to_lamports("1.0").unwrap();
         let min_amount_out = 0;
 
         let quote = amm

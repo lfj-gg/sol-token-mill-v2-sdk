@@ -11,7 +11,7 @@ use litesvm_token::{
     },
 };
 use solana_sdk::{
-    clock::Clock, instruction::Instruction, message::Message, native_token::sol_to_lamports,
+    clock::Clock, instruction::Instruction, message::Message, native_token::sol_str_to_lamports,
     program_pack::Pack, pubkey, pubkey::Pubkey, signature::Keypair, signer::Signer,
     system_instruction::create_account, transaction::Transaction,
 };
@@ -22,11 +22,11 @@ pub fn get_vm(actors: Vec<Pubkey>) -> LiteSVM {
     let mut svm = LiteSVM::new()
         .with_sigverify(false)
         .with_blockhash_check(false)
-        .with_transaction_history(0)
-        .with_spl_programs();
+        .with_transaction_history(0);
 
     for actor in actors.clone() {
-        svm.airdrop(&actor, sol_to_lamports(10.0)).unwrap();
+        svm.airdrop(&actor, sol_str_to_lamports("10.0").unwrap())
+            .unwrap();
     }
 
     svm.add_program_from_file(
@@ -80,7 +80,8 @@ pub fn create_tokens<const N: usize>(
     authority: Option<&Pubkey>,
 ) {
     let payer = Keypair::new();
-    svm.airdrop(&payer.pubkey(), sol_to_lamports(10.0)).unwrap();
+    svm.airdrop(&payer.pubkey(), sol_str_to_lamports("10.0").unwrap())
+        .unwrap();
 
     for address in addresses {
         create_mint(svm, &address, Some(&payer.pubkey()), Some(9));
@@ -149,7 +150,8 @@ pub fn create_mint(
 
 pub fn create_atas(svm: &mut LiteSVM, mints: Vec<Pubkey>, owners: Vec<Pubkey>) {
     let payer = Keypair::new();
-    svm.airdrop(&payer.pubkey(), sol_to_lamports(10.0)).unwrap();
+    svm.airdrop(&payer.pubkey(), sol_str_to_lamports("10.0").unwrap())
+        .unwrap();
 
     for mint in &mints {
         for owner in &owners {
